@@ -2,6 +2,8 @@
 
 git submodule update --init --recursive
 
+cp nginx/polkascan-${NETWORK_ID}.conf polkascan-pre-explorer-gui/nginx/polkascan-prod.conf
+
 /scripts/build-image.sh \
     web3f/polkascan-explorer-gui \
     --build-arg API_URL \
