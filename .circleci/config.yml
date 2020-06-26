@@ -18,7 +18,7 @@ publish: &publish
       - setup_remote_docker
       - run:
           command: |
-            /scripts/publish-image.sh web3f/polkascan-explorer-gui ${IMAGE_TAG}
+            ./scripts/publish-image.sh web3f/polkascan-explorer-gui
 
 jobs:
   buildImageEngineeringKusama:
@@ -47,12 +47,12 @@ jobs:
 
   publishImageEngineeringKusama:
     environment:
-      IMAGE_TAG: engineering-kusama-${CIRCLE_TAG}
+      NETWORK_ID: kusama
     <<: *publish
 
   publishImageEngineeringPolkadot:
     environment:
-      IMAGE_TAG: engineering-polkadot-cc1-${CIRCLE_TAG}
+      NETWORK_ID: polkadot-cc1
     <<: *publish
 
 workflows:

@@ -7,8 +7,9 @@ git submodule update --init --recursive
 
 cp nginx/polkascan-${NETWORK_ID}.conf polkascan-pre-explorer-gui/nginx/polkascan-prod.conf
 
-/scripts/build-image.sh \
-    ${IMAGE}:${TAG} \
+docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+
+docker build -t ${IMAGE}:${TAG} \
     --build-arg API_URL \
     --build-arg NETWORK_NAME \
     --build-arg NETWORK_ID \
@@ -19,3 +20,5 @@ cp nginx/polkascan-${NETWORK_ID}.conf polkascan-pre-explorer-gui/nginx/polkascan
     --build-arg NETWORK_COLOR_CODE \
     -f polkascan-pre-explorer-gui/Dockerfile \
     ./polkascan-pre-explorer-gui
+
+docker push ${IMAGE}:${TAG}
