@@ -1,0 +1,85 @@
+version: 2
+
+build: &build
+    docker:
+      - image: web3f/ci-commons:v2.1.4
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: |
+            ./scripts/build-image.sh
+
+publish: &publish
+    docker:
+      - image: web3f/ci-commons:v2.1.4
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: |
+            ./scripts/publish-image.sh
+
+jobs:
+  buildImageEngineeringKusama:
+    environment:
+      API_URL: "http://kusama-harvester-explorer-api:8000"
+      NETWORK_NAME: Kusama
+      NETWORK_ID: kusama
+      NETWORK_TYPE: pre
+      CHAIN_TYPE: relay
+      NETWORK_TOKEN_SYMBOL: KSM
+      NETWORK_TOKEN_DECIMALS: 12
+      NETWORK_COLOR_CODE: 000000
+    <<: *build
+
+  buildImageEngineeringPolkadot:
+    environment:
+      API_URL: "http://polkadot-harvester-explorer-api:8000"
+      NETWORK_NAME: Polkadot CC1
+      NETWORK_ID: polkadot-cc1
+      NETWORK_TYPE: pre
+      CHAIN_TYPE: relay
+      NETWORK_TOKEN_SYMBOL: DOT
+      NETWORK_TOKEN_DECIMALS: 12
+      NETWORK_COLOR_CODE: e6007a
+    <<: *build
+
+  publishImageEngineeringKusama:
+    environment:
+      IMAGE_TAG: engineering-kusama-${CIRCLE_TAG}
+    <<: *publish
+
+  publishImageEngineeringPolkadot:
+    environment:
+      IMAGE_TAG: engineering-polkadot-${CIRCLE_TAG}
+    <<: *publish
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - buildImageEngineeringKusama:
+          filters:
+            tags:
+              only: /.*/
+      - buildImageEngineeringPolkadot:
+          filters:
+            tags:
+              only: /.*/
+      - publishImageEngineeringKusama:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+          requires:
+            - buildImageEngineeringKusama
+      - publishImageEngineeringPolkadot:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+          requires:
+            - buildImageEngineeringPolkadot
