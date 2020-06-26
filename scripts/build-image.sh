@@ -1,11 +1,14 @@
 #!/bin/bash
 
+IMAGE=web3f/polkascan-explorer-gui
+TAG=engineering-${NETWORK_ID}-${CIRCLE_SHA1}
+
 git submodule update --init --recursive
 
 cp nginx/polkascan-${NETWORK_ID}.conf polkascan-pre-explorer-gui/nginx/polkascan-prod.conf
 
 /scripts/build-image.sh \
-    web3f/polkascan-explorer-gui \
+    ${IMAGE}:${TAG} \
     --build-arg API_URL \
     --build-arg NETWORK_NAME \
     --build-arg NETWORK_ID \
