@@ -2,7 +2,7 @@ version: 2
 
 build: &build
     docker:
-      - image: web3f/ci-commons:v2.1.4
+      - image: web3f/ci-commons:v2.2.0
     steps:
       - checkout
       - setup_remote_docker
@@ -12,13 +12,13 @@ build: &build
 
 publish: &publish
     docker:
-      - image: web3f/ci-commons:v2.1.4
+      - image: web3f/ci-commons:v2.2.0
     steps:
       - checkout
       - setup_remote_docker
       - run:
           command: |
-            ./scripts/publish-image.sh
+            /scripts/publish-image.sh web3f/polkascan-explorer-gui ${IMAGE_TAG}
 
 jobs:
   buildImageEngineeringKusama:
