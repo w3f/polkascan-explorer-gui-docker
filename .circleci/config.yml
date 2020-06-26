@@ -52,7 +52,7 @@ jobs:
 
   publishImageEngineeringPolkadot:
     environment:
-      IMAGE_TAG: engineering-polkadot-${CIRCLE_TAG}
+      IMAGE_TAG: engineering-polkadot-cc1-${CIRCLE_TAG}
     <<: *publish
 
 workflows:
